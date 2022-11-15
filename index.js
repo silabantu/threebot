@@ -1,34 +1,17 @@
 require('./config')
 const { default: makeWASocket, useSingleFileAuthState, DisconnectReason, fetchLatestBaileysVersion, generateForwardMessageContent, prepareWAMessageMedia, generateWAMessageFromContent, generateMessageID, downloadContentFromMessage, makeInMemoryStore, jidDecode, proto } = require("@adiwajshing/baileys")
-const P = require("pino")
-const p = require("pino")
-const Pino = require("pino")
-const clui = require("clui")
-const util = require("util")
-const fetch = require("node-fetch")
-const yts = require("yt-search")
-const Crypto = require("crypto")
-const ff = require('fluent-ffmpeg')
-const webp = require("node-webpmux")
-const cheerio = require("cheerio")
-const cfonts = require("cfonts")
-const BodyForm = require("form-data")
-const mimetype = require("mime-types")
-const speed = require("performance-now")
-const { color } = require("./lib/color")
-const { fromBuffer } = require("file-type")
-const { tmpdir } = require("os")
 const pino = require('pino')
 const { Boom } = require('@hapi/boom')
 const fs = require('fs')
 const yargs = require('yargs/yargs')
 const chalk = require('chalk')
+const figlet = require('figlet')
 const FileType = require('file-type')
 const path = require('path')
 const _ = require('lodash')
 const axios = require('axios')
 const PhoneNumber = require('awesome-phonenumber')
-const { intro } = require('./src/intro')
+const { color } = require('./lib/color')
 const { imageToWebp, videoToWebp, writeExifImg, writeExifVid } = require('./lib/exif')
 const { smsg, isUrl, generateMessageTag, getBuffer, getSizeMedia, fetchJson, await, sleep } = require('./lib/myfunc')
 
@@ -78,16 +61,9 @@ loadDatabase()
 if (global.db) setInterval(async () => {
     if (global.db.data) await global.db.write()
   }, 30 * 1000)
-  
-const banner = cfonts.render(('THREE|BOT'), {
-font : "chrome",
-align: "center",
-colors: ["#3456ff","yellow","red"]
-})
 
 async function startjobotz() {
 const { state, saveState } = useSingleFileAuthState(`./${sessionName}.json`)
-console.log(banner.string)
     const jobotz = makeWASocket({
         logger: pino({ level: 'silent' }),
         printQRInTerminal: true,
@@ -96,6 +72,14 @@ console.log(banner.string)
     })
 
     store.bind(jobotz.ev)
+
+console.log(color(figlet.textSync('THREE BOT', {
+font: 'Standard',
+horizontalLayout: 'default',
+vertivalLayout: 'default',
+width: 80,
+whitespaceBreak: false
+}), 'yellow'))
     
     // anticall auto block
     jobotz.ws.on('CB:call', async (json) => {
